@@ -1,0 +1,352 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Main.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+<div class="content">
+    <div class="panel-header bg-primary-gradient">
+        <div class="page-inner py-5">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                <div>
+                    <h2 class="text-white pb-2 fw-bold">Nhân viên</h2>
+                    <h5 class="text-white op-7 mb-2">Home/Admin/Nhân viên</h5>
+                </div>
+                <div class="ml-md-auto py-2 py-md-0">
+                    <a href="#" class="btn btn-white btn-border btn-round mr-2">Manage</a>
+                    <a href="#" class="btn btn-secondary btn-round" data-toggle="modal" data-target="#addModal" onclick="openAddModal()">Thêm mới</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-inner mt--5">
+        <div class="row mt--2">
+            <div class="col-md-12">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive table-hover table-sales">
+                                    <table id="table_nhanvien" class="display">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã nhân viên</th>
+                                                <th>Tên</th>
+                                                <th>Ngày sinh</th>
+                                                <th>Địa chỉ</th>
+                                                <th>Giới tính</th>
+                                                <th>Ngày vào làm</th>
+                                                <th>Chức vụ</th>
+                                                <th>Lương</th>
+                                                <th>CCCD</th>
+                                                <th>Tài khoản</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var f in @ViewBag.ListNhanVien)
+                                            {
+                                                <tr>
+                                                    <td>@f.Manhanvien</td>
+                                                    <td>@f.Ten</td>
+                                                    <td>@f.Ngaysinh</td>
+                                                    <td>@f.Diachi</td>
+                                                    <td>@f.Tengioitinh</td>
+                                                    <td>@f.Ngayvaolam</td>
+                                                    <td>@f.Chucvu</td>
+                                                    <td>@f.Luong</td>
+                                                    <td>@f.CCCD</td>
+                                                    <td>@f.Tentaikhoan</td>
+                                                    <td>
+                                                        <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addModal" style="margin-right: 5px;" onclick="openUpdateModal(@f.Manhanvien)">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-outline-danger btn-sm" onclick="openDeleteModal(@f.Manhanvien)" data-toggle="modal" data-target="#deleteModal">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Insert</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <form id="bouqueti-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="required" for="inputEmail4">Tên</label>
+                                <input type="text" class="form-control contact-method" id="Ten" placeholder="Tên">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="required" for="inputEmail4">Ngày sinh</label>
+                                <input type="date" class="form-control contact-method" id="Ngaysinh">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Địa chỉ</label>
+                                <input type="text" class="form-control contact-method" id="Diachi" placeholder="Địa chỉ">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="required" for="inputEmail4">Ngày vào làm</label>
+                                <input type="date" class="form-control contact-method" id="Ngayvaolam">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="required" for="inputEmail4">Chức vụ</label>
+                                <input type="text" class="form-control contact-method" id="Chucvu" placeholder="Chức vụ">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="required" for="inputEmail4">Lương</label>
+                                <input type="text" class="form-control contact-method" id="Luong" placeholder="Lương">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">CCCD</label>
+                                <input type="text" class="form-control contact-method" id="CCCD" placeholder="CCCD">
+                            </div>
+                            <div class="infoForm infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Tên tài khoản</label>
+                                <input type="text" class="form-control contact-method" id="Tentaikhoan" placeholder="Tên tài khoản">
+                            </div>
+                            <div class="infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Mật khẩu</label>
+                                <input type="password" class="form-control contact-method" id="Matkhau" placeholder="Mật khẩu">
+                            </div>
+                            <div class="infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Email</label>
+                                <input type="text" class="form-control contact-method" id="Email" placeholder="Email">
+                            </div>
+                            <div class="infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Số điện thoại</label>
+                                <input type="text" class="form-control contact-method" id="Sodienthoai" placeholder="Số điện thoại">
+                            </div>
+                            <div class="infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Code</label>
+                                <input type="text" class="form-control contact-method" id="Code" placeholder="Code">
+                            </div>
+                            <div class="infoForm form-group col-md-6">
+                                <label class="required" for="inputEmail4">Tình trạng</label>
+                                <input type="text" class="form-control contact-method" id="Tinhtrang" placeholder="Tình trạng">
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="male" value="option1" onclick="checkGender(false)">
+                                <label class="required" class="form-check-label" for="inlineRadio1">Nữ</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="female" value="option2" onclick="checkGender(true)">
+                                <label class="required" class="form-check-label" for="inlineRadio2">Nam</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="submit()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 style="text-align:center">Bạn chắc chắn muốn xóa bản ghi này ?</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="deleteItem()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var id_record = 0;
+    var dataUpdate = {};
+
+    var gender = null;
+
+    checkGender = (_gender) => {
+        gender = _gender;
+    }
+
+    openAddModal = () => {
+        id_record = 0;
+        $('#Ten').val('');
+        $('#Ngaysinh').val('');
+        $('#Diachi').val('');
+        $('#Gioitinh').val('');
+        $('#Ngayvaolam').val('');
+        $('#Chucvu').val('');
+        $('#Luong').val('');
+        $('#CCCD').val('');
+        $('#female').prop('checked', false);
+        $('#male').prop('checked', false);
+        $('#Tentaikhoan').val('');
+        $('#Matkhau').val('');
+        $('#Email').val('');
+        $('#Sodienthoai').val('');
+        $('#Code').val('');
+        $('#Tinhtrang').val('');
+
+        $('.infoForm').css('display', 'block');
+    };
+
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    $(document).ready(function () {
+        $('#table_nhanvien').DataTable();
+    });
+
+    submit = () => {
+        var req = {
+            Manhanvien: id_record,
+            Ten: $('#Ten').val(),
+            Ngaysinh: $('#Ngaysinh').val(),
+            Diachi: $('#Diachi').val(),
+            Gioitinh: gender,
+            Ngayvaolam: $('#Ngayvaolam').val(),
+            Chucvu: $('#Chucvu').val(),
+            Luong: $('#Luong').val(),
+            CCCD: $('#CCCD').val(),
+            Tinhtrang: $('#Tinhtrang').val(),
+            Taikhoan: {
+                Tentaikhoan: $('#Tentaikhoan').val(),
+                Matkhau: $('#Matkhau').val(),
+                Email: $('#Email').val(),
+                Sodienthoai: $('#Sodienthoai').val(),
+                Code: $('#Code').val(),
+                Tinhtrang: $('#Tinhtrang').val(),
+            }
+        }
+
+        postData('/Nhanvien/Save', req)
+            .then((data) => {
+                if (data.success) {
+                    toastr.success('Successfully !');
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            });
+    }
+
+    openDeleteModal = (id) => {
+        id_record = id;
+    }
+
+    formatDate = (y, m, d) => {
+        if (m < 10) {
+            m = '0' + m;
+        }
+        if (d < 10) {
+            d = '0' + d
+        }
+        return `${y}-${m}-${d}`.toString()
+    }
+
+    openUpdateModal = (id) => {
+        id_record = id;
+        $.ajax({
+            url: '/Nhanvien/FindById?manhanvien=' + id,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    var ngaysinh = new Date(parseInt((result.data.Ngaysinh).toString().replaceAll('/Date(', '').replaceAll(')/', '')));
+                    var ngayvaolam = new Date(parseInt((result.data.Ngayvaolam).toString().replaceAll('/Date(', '').replaceAll(')/', '')));
+                    $('#Ngaysinh').val(formatDate(ngaysinh.getFullYear(), ngaysinh.getMonth() + 1, ngaysinh.getDate()).toString());
+                    $('#Ngayvaolam').val(formatDate(ngayvaolam.getFullYear(), ngayvaolam.getMonth() + 1, ngayvaolam.getDate()).toString());
+                    $('.infoForm').css('display', 'none');
+
+
+                    if (result.data.Gioitinh) {
+                        $('#female').prop('checked', true);
+                        gender = true;
+                    }
+                    else {
+                        $('#male').prop('checked', true);
+                        gender = false;
+                    }
+
+                    $('#Ten').val(result.data.Ten);
+                    $('#Diachi').val(result.data.Diachi);
+                    $('#Chucvu').val(result.data.Chucvu);
+                    $('#Luong').val(result.data.Luong);
+                    $('#CCCD').val(result.data.CCCD);
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+    deleteItem = () => {
+        $.ajax({
+            url: '/Nhanvien/Delete?manhanvien=' + id_record,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    toastr.success('Successfully !');
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+</script>

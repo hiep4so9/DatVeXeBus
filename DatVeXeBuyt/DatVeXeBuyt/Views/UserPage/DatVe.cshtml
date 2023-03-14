@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "DatVe";
+    Layout = "~/Views/Shared/UserLayout/_Main.cshtml";
+}
+
+<!-- contact section -->
+
+<section class="contact_section layout_padding">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                Đặt vé trực tuyến<br>
+            </h2>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5  offset-md-1">
+                <div class="contact_form">
+                    <h4>
+                        Chọn tuyến xe
+                    </h4>
+                    <form>
+                        <select class="form-control form-control-lg" style="width: 100%" id="select_tuyen">
+                            <option selected>Chọn tuyến xe</option>
+                            @foreach (var m in @ViewBag.ListTuyenXe)
+                            {
+                                <option value="@m.Matuyen">@m.Matuyen - @m.Luotdi - @m.Luotve</option>
+
+                            }
+                        </select>
+                        <label class="form-check-label" style="color: white" for="flexCheckDefault">
+                            Vé tháng
+                            <input type="checkbox" id="veThang" onclick="checkVeThang()" />
+                        </label>
+                        <input type="text" placeholder="Giá tiền" id="Giatien" disabled style="color: white">
+                        <div class="col-md-12 row">
+                            <a class="btn btn-warning" href="javascript:void(0)" type="button" onclick="buyTicket()">Xác nhận đặt</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6 px-0">
+                <div class="img-box">
+                    <img src="https://file1.hutech.edu.vn/file/editor/homepage1/bus-541.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end contact section -->
+
+<script>
+    var ngayphathanh = new Date();
+    var ngayhethan = new Date();
+    $(document).ready(function () {
+        $('#Giatien').val('7000')
+    });
+    checkVeThang = () => {
+        if ($('#veThang').is(":checked")) {
+            $('#Giatien').val('30000');
+            ngayhethan = new Date();
+        }
+        else {
+            $('#Giatien').val('7000');
+            ngayhethan = ngayphathanh.setDate(ngayphathanh.getDate() + 30);;
+        }
+    }
+
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    buyTicket = () => {
+        if (JSON.parse(localStorage.getItem('UserInfo'))) {
+            var soduTK = 0;
+            var req = {
+                Ngayphathanh: ngayphathanh,
+                Ngayhethan: ngayhethan,
+                Matuyen: $('#select_tuyen').val(),
+                Loaive: 3,
+                Vethang: $('#veThang').is(":checked"),
+                Giatien: $('#Giatien').val(),
+                Id_Taikhoan: JSON.parse(localStorage.getItem('UserInfo')).Id_Taikhoan
+            }
+
+            $.ajax({
+                url: '/TaiKhoan/FindById?id_taikhoan=' + JSON.parse(localStorage.getItem('UserInfo')).Id_Taikhoan,
+                type: 'GET',
+                success: function (result) {
+                    if (result.success) {
+                        soduTK = result.data.Sodu;
+                        if (soduTK < $('#Giatien').val()) {
+                            toastr.warning('Số dư trong tài khoản không đủ. Bạn cần nạp thêm tiền !');
+                        }
+                        else {
+                           
+                            postData('/UserPage/BuyTicket', req)
+                                .then((data) => {
+                                    if (data.success) {
+                                        toastr.success('Successfully !');
+                                    }
+                                    else {
+                                        toastr.warning('Failed !');
+                                        $('.modal').modal('hide');
+                                    }
+                                });
+                        }
+                    }
+                    else {
+                        toastr.warning('Failed !');
+                        $('.modal').modal('hide');
+                    }
+                }
+            });
+        }
+        else {
+            toastr.warning('Bạn cần đăng nhập để thực hiện thao tác này !');
+        }
+    }
+</script>

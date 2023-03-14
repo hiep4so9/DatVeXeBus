@@ -1,0 +1,315 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Main.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+
+<div class="content">
+    <div class="panel-header bg-primary-gradient">
+        <div class="page-inner py-5">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                <div>
+                    <h2 class="text-white pb-2 fw-bold">Tuyến xe</h2>
+                    <h5 class="text-white op-7 mb-2">Trang chủ/Admin/Tuyến xe</h5>
+                </div>
+                <div class="ml-md-auto py-2 py-md-0">
+                    <a href="#" class="btn btn-white btn-border btn-round mr-2">Manage</a>
+                    <a href="#" class="btn btn-secondary btn-round" data-toggle="modal" data-target="#addModal" onclick="openAddModal()">Thêm mới</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-inner mt--5">
+        <div class="row mt--2">
+            <div class="col-md-12">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive table-hover table-sales">
+                                    <table id="table_tuyenxe" class="display">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã tuyến</th>
+                                                <th>Số tuyến</th>
+                                                <th>Tên</th>
+                                                <th>Thời gian bắt đầu</th>
+                                                <th>Thời gian kết thúc</th>
+                                                <th>Lượt đi</th>
+                                                <th>Lượt về</th>
+                                                <th>Loại tuyến</th>
+                                                <th>Thời gian chạy</th>
+                                                <th>Giãn cách tuyến</th>
+                                                <th>Số chuyến</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var m in @ViewBag.ListTuyenXe)
+                                            {
+                                                <tr>
+                                                    <td>@m.Matuyen</td>
+                                                    <td>@m.Tuyenso</td>
+                                                    <td>@m.Tentuyen</td>
+                                                    <td>@m.Thoigianbatdau</td>
+                                                    <td>@m.Thoigianketthuc</td>
+                                                    <td>@m.Luotdi</td>
+                                                    <td>@m.Luotve</td>
+                                                    <td>@m.Loaituyen</td>
+                                                    <td>@m.Thoigianchay</td>
+                                                    <td>@m.Giancachtuyen</td>
+                                                    <td>@m.Sochuyen</td>
+                                                    <td>
+                                                        <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addModal" style="margin-right: 5px;" onclick="openUpdateModal(@m.Matuyen)">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-outline-danger btn-sm" onclick="openDeleteModal(@m.Matuyen)" data-toggle="modal" data-target="#deleteModal">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Thêm mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <form id="bouqueti-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Số tuyến</label>
+                                <input type="text" class="form-control contact-method" id="Tuyenso" placeholder="Nhập số tuyến">
+                            </div>
+                            @*<div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Tên tuyến</label>
+                                    <input type="text" class="form-control contact-method" id="Tentuyen" placeholder="Nhập tên tuyến">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Thời gian bắt đầu</label>
+                                    <input type="time" class="form-control contact-method" id="Thoigianbatdau">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Thời gian kết thúc</label>
+                                    <input type="time" class="form-control contact-method" id="Thoigianketthuc">
+                                </div>*@
+                            @*<div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Lượt đi</label>
+                                    <input type="text" class="form-control contact-method" id="Luotdi">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Lượt về</label>
+                                    <input type="text" class="form-control contact-method" id="Luotve">
+                                </div>*@
+                            <label style="font-weight: bold" class="col-md-12" for="file_luotdi">Import bằng excel (Lượt đi):</label>
+                            <input type="file" id="file_luotdi" name="file_luotdi"><br><br>
+                            @*<div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Loại tuyến</label>
+                                    <input type="text" class="form-control contact-method" id="Loaituyen">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Thời gian chạy</label>
+                                    <input type="text" class="form-control contact-method" id="Thoigianchay">
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label class="required" for="inputEmail4">Giãn cách tuyến</label>
+                                    <input type="text" class="form-control contact-method" id="Giancachtuyen">
+                                </div>*@
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Chuyến xe</label>
+                                <input type="text" class="form-control contact-method" id="Sochuyen">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="submit()">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 style="text-align:center">Bạn chắc chắn muốn xóa bản ghi này ?</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="deleteItem()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var id_record = 0;
+    var dataUpdate = {};
+    var file_luotdi_name = '';
+
+    openAddModal = () => {
+        id_record = 0;
+        $('#Tuyenso').val('');
+        $('#Tentuyen').val('');
+        $('#Thoigianbatdau').val('');
+        $('#Thoigianketthuc').val('');
+        $('#Luotdi').val('');
+        $('#Luotve').val('');
+        $('#Loaituyen').val('');
+        $('#Thoigianchay').val('');
+        $('#Giancachtuyen').val('');
+        $('#Sochuyen').val('');
+    };
+
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    $(document).ready(function () {
+        $('#table_tuyenxe').DataTable();
+    });
+
+    $('#file_luotdi').change(function () {
+        file_luotdi_name = this.files[0].name;
+    })
+
+    submit = () => {
+        //var req = {
+        //    Matuyen: id_record,
+        //    Tuyenso: $('#Tuyenso').val(),
+        //    Tentuyen: $('#Tentuyen').val(),
+        //    Thoigianbatdau: $('#Thoigianbatdau').val(),
+        //    Thoigianketthuc: $('#Thoigianketthuc').val(),
+        //    Luotdi: $('#Luotdi').val(),
+        //    Luotve: $('#Luotve').val(),
+        //    Loaituyen: $('#Loaituyen').val(),
+        //    Thoigianchay: $('#Thoigianchay').val(),
+        //    Giancachtuyen: $('#Giancachtuyen').val(),
+        //    Sochuyen: $('#Sochuyen').val(),
+        //}
+
+        //postData('/TuyenXe/Save', req)
+        //    .then((data) => {
+        //        if (data.success) {
+        //            toastr.success('Successfully !');
+        //            $('.modal').modal('hide');
+        //            window.location.reload();
+        //        }
+        //        else {
+        //            toastr.warning('Failed !');
+        //            $('.modal').modal('hide');
+        //        }
+        //    });
+        $.ajax({
+            url: '/ReadFileExcel/UploadTuyenXeToEpPlus?fileName=' + file_luotdi_name + '&soTuyen=' + $('#Tuyenso').val() + '&soChuyen=' + $('#Sochuyen').val(),
+            type: 'GET',
+            success: function (result) {
+                toastr.success('Successfully !');
+                $('.modal').modal('hide');
+                window.location.reload();
+            }
+        });
+    }
+
+    openDeleteModal = (id) => {
+        id_record = id;
+    }
+
+    openUpdateModal = (id) => {
+        id_record = id;
+        $.ajax({
+            url: '/TuyenXe/FindById?matuyen=' + id,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    var tgbd = result.data.Thoigianbatdau;
+                    var tgkt = result.data.Thoigianketthuc;
+                    var tgbdValue = convertTime(tgbd.Hours, tgbd.Minutes);
+                    var tgktValue = convertTime(tgkt.Hours, tgkt.Minutes);
+                    console.log(tgktValue);
+                    $('#Tuyenso').val(result.data.Tuyenso);
+                    $('#Tentuyen').val(result.data.Tentuyen);
+                    $('#Thoigianbatdau').val(tgbdValue);
+                    $('#Thoigianketthuc').val(tgktValue);
+                    $('#Luotdi').val(result.data.Luotdi);
+                    $('#Luotve').val(result.data.Luotve);
+                    $('#Loaituyen').val(result.data.Loaituyen);
+                    $('#Thoigianchay').val(result.data.Thoigianchay);
+                    $('#Giancachtuyen').val(result.data.Giancachtuyen);
+                    $('#Sochuyen').val(result.data.Sochuyen);
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+    deleteItem = () => {
+        $.ajax({
+            url: '/TuyenXe/Delete?matuyen=' + id_record,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    toastr.success('Successfully !');
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+</script>

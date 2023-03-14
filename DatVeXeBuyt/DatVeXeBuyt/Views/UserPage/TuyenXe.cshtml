@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "TuyenXe";
+    Layout = "~/Views/Shared/UserLayout/_Main.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<div class="content">
+    <div class="container">
+        <div class="heading_container">
+            <h2>
+                Danh sách tuyến xe
+            </h2>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <input id="myInput" type="text" placeholder="Tìm kiếm nhanh..">
+    </div>
+    <div class="">
+        <div class="col-md-12">
+            <div class="table-responsive table-hover table-sales">
+                <table id="table_tuyenxe" class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã tuyến</th>
+                            <th>Số tuyến</th>
+                            <th>Tên</th>
+                            <th>Thời gian bắt đầu</th>
+                            <th>Thời gian kết thúc</th>
+                            <th>Lượt đi</th>
+                            <th>Lượt về</th>
+                            <th>Loại tuyến</th>
+                            <th>Thời gian chạy</th>
+                            <th>Giãn cách tuyến</th>
+                            <th>Số chuyến</th>
+                        </tr>
+                    </thead>
+                    <tbody id="myTable">
+                        @foreach (var m in @ViewBag.ListTuyenXe)
+                        {
+                            <tr>
+                                <td>@m.Matuyen</td>
+                                <td>@m.Tuyenso</td>
+                                <td>@m.Tentuyen</td>
+                                <td>@m.Thoigianbatdau</td>
+                                <td>@m.Thoigianketthuc</td>
+                                <td>@m.Luotdi</td>
+                                <td>@m.Luotve</td>
+                                <td>@m.Loaituyen</td>
+                                <td>@m.Thoigianchay</td>
+                                <td>@m.Giancachtuyen</td>
+                                <td>@m.Sochuyen</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

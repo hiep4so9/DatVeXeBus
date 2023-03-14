@@ -1,0 +1,371 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Main.cshtml";
+}
+
+
+<div class="panel-header bg-primary-gradient">
+    <div class="page-inner py-5">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+            <div>
+                <h2 class="text-white pb-2 fw-bold">Thống kê</h2>
+                <h5 class="text-white op-7 mb-2">QL Xe Buyt</h5>
+            </div>
+            <div class="ml-md-auto py-2 py-md-0">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-inner mt--5">
+    <div class="row mt--2">
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Tổng quan</div>
+                    <div class="card-category">Tổng quan về thông tin chung trong hệ thống</div>
+                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-1"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Khách hàng</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-2"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Tuyến xe</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-3"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Xe</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Thống kê doanh thu</div>
+                    <div class="row py-3">
+                        <div class="col-md-4 d-flex flex-column justify-content-around">
+                            <div>
+                                <h6 class="fw-bold text-uppercase text-success op-8">Tổng tiền vé đã bán</h6>
+                                <h3 class="fw-bold">@ViewBag.TotalIncome VNĐ</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div id="chart-container">
+                                <canvas id="totalIncomeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row">
+                        <div class="card-title">Số lượng tài khoản đăng kí</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container" style="min-height: 375px">
+                        <canvas id="statisticsChart"></canvas>
+                    </div>
+                    <div id="myChartLegend"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <div class="card-title">Số lượng khách bắt xe</div>
+                    <div class="card-category">01/11/2022 - 30/11/2022</div>
+                </div>
+                <div class="card-body pb-0">
+                    <div class="pull-in">
+                        <canvas id="dailySalesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body pb-0">
+                    <div class="h1 fw-bold float-right text-warning">+7%</div>
+                    <h2 class="mb-2">@ViewBag.CountHoaDon</h2>
+                    <p class="text-muted">Số hoá đơn</p>
+                    <div class="pull-in sparkline-fix">
+                        <div id="lineChart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row row-card-no-pd">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                        <h4 class="card-title">Danh sách các tuyến xe trong thành phố</h4>
+                        <div class="card-tools">
+                            <a href="#" class="btn btn-info btn-border btn-round btn-sm mr-2" onclick="exportTableToExcel('table_tuyenXe')">
+                                <span class="btn-label">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+                                Xuất Excel
+                            </a>
+                            <a href="#" class="btn btn-info btn-border btn-round btn-sm" onclick="printTable()">
+                                <span class="btn-label">
+                                    <i class="fa fa-print"></i>
+                                </span>
+                                Print
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive table-hover table-sales">
+                                <table class="table" id="table_tuyenXe">
+                                    <tbody>
+                                        @foreach (var m in @ViewBag.ListTuyenXe)
+                                        {
+                                            <tr>
+                                                <td>@m.Matuyen</td>
+                                                <td>@m.Tuyenso</td>
+                                                <td>@m.Tentuyen</td>
+                                                <td>@m.Thoigianbatdau</td>
+                                                <td>@m.Thoigianketthuc</td>
+                                                <td>@m.Luotdi</td>
+                                                <td>@m.Luotve</td>
+                                                <td>@m.Loaituyen</td>
+                                                <td>@m.Thoigianchay</td>
+                                                <td>@m.Giancachtuyen</td>
+                                                <td>@m.Sochuyen</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../Content/assets/js/core/jquery.3.2.1.min.js"></script>
+<script src="../Content/assets/js/core/bootstrap.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="../Content/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+<script src="../Content/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+
+<!-- jQuery Scrollbar -->
+<script src="../Content/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+
+<!-- Chart JS -->
+<script src="../Content/assets/js/plugin/chart.js/chart.min.js"></script>
+
+<!-- jQuery Sparkline -->
+<script src="../Content/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Chart Circle -->
+<script src="../Content/assets/js/plugin/chart-circle/circles.min.js"></script>
+
+<!-- Datatables -->
+<script src="../Content/assets/js/plugin/datatables/datatables.min.js"></script>
+
+
+<!-- jQuery Vector Maps -->
+<script src="../Content/assets/js/plugin/jqvmap/jquery.vmap.min.js"></script>
+<script src="../Content/assets/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
+
+<!-- Sweet Alert -->
+<script src="../Content/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+<!-- Atlantis JS -->
+<script src="../Content/assets/js/atlantis.min.js"></script>
+
+<!-- Atlantis DEMO methods, don't include it in your project! -->
+<script src="../Content/assets/js/setting-demo.js"></script>
+<script src="../Content/assets/js/demo.js"></script>
+<script>
+    function printTable() {
+        var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+        mywindow.document.write('<html><head><title>' + document.title + '</title>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write('<h1>' + document.title + '</h1>');
+        mywindow.document.write(`<table id="table_tuyenxe" class="display">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã tuyến</th>
+                                                <th>Số tuyến</th>
+                                                <th>Tên</th>
+                                                <th>Thời gian bắt đầu</th>
+                                                <th>Thời gian kết thúc</th>
+                                                <th>Lượt đi</th>
+                                                <th>Lượt về</th>
+                                                <th>Loại tuyến</th>
+                                                <th>Thời gian chạy</th>
+                                                <th>Giãn cách tuyến</th>
+                                                <th>Số chuyến</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var m in @ViewBag.ListTuyenXe)
+                                            {
+                                                <tr>
+                                                    <td>@m.Matuyen</td>
+                                                    <td>@m.Tuyenso</td>
+                                                    <td>@m.Tentuyen</td>
+                                                    <td>@m.Thoigianbatdau</td>
+                                                    <td>@m.Thoigianketthuc</td>
+                                                    <td>@m.Luotdi</td>
+                                                    <td>@m.Luotve</td>
+                                                    <td>@m.Loaituyen</td>
+                                                    <td>@m.Thoigianchay</td>
+                                                    <td>@m.Giancachtuyen</td>
+                                                    <td>@m.Sochuyen</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>`);
+        mywindow.document.write('</body></html>');
+
+        mywindow.document.close(); // necessary for IE >= 10
+        mywindow.focus(); // necessary for IE >= 10*/
+
+        mywindow.print();
+        mywindow.close();
+
+        return true;
+    }
+
+    function exportTableToExcel(tableID, filename = '') {
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+        // Specify file name
+        filename = filename ? filename + '.xls' : 'TuyenXe.xls';
+
+        // Create download link element
+        downloadLink = document.createElement("a");
+
+        document.body.appendChild(downloadLink);
+
+        if (navigator.msSaveOrOpenBlob) {
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob(blob, filename);
+        } else {
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+            // Setting the file name
+            downloadLink.download = filename;
+
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+
+    Circles.create({
+        id: 'circles-1',
+        radius: 45,
+        value: 60,
+        maxValue: 100,
+        width: 7,
+        text: @ViewBag.CountKhachHang,
+        colors: ['#f1f1f1', '#FF9E27'],
+        duration: 400,
+        wrpClass: 'circles-wrp',
+        textClass: 'circles-text',
+        styleWrapper: true,
+        styleText: true
+    })
+
+    Circles.create({
+        id: 'circles-2',
+        radius: 45,
+        value: 70,
+        maxValue: 100,
+        width: 7,
+        text: @ViewBag.CountTuyenXe,
+        colors: ['#f1f1f1', '#2BB930'],
+        duration: 400,
+        wrpClass: 'circles-wrp',
+        textClass: 'circles-text',
+        styleWrapper: true,
+        styleText: true
+    })
+
+    Circles.create({
+        id: 'circles-3',
+        radius: 45,
+        value: 40,
+        maxValue: 100,
+        width: 7,
+        text: @ViewBag.CountXe,
+        colors: ['#f1f1f1', '#F25961'],
+        duration: 400,
+        wrpClass: 'circles-wrp',
+        textClass: 'circles-text',
+        styleWrapper: true,
+        styleText: true
+    })
+
+    var totalIncomeChart = document.getElementById('totalIncomeChart').getContext('2d');
+
+    var mytotalIncomeChart = new Chart(totalIncomeChart, {
+        type: 'bar',
+        data: {
+            labels: ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"],
+            datasets: [{
+                label: "Total Income",
+                backgroundColor: '#ff9e27',
+                borderColor: 'rgb(23, 125, 255)',
+                data: [6, 10, 9, 5, 12, 9, 8],
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false,
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        display: false //this will remove only the label
+                    },
+                    gridLines: {
+                        drawBorder: false,
+                        display: false
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        drawBorder: false,
+                        display: false
+                    }
+                }]
+            },
+        }
+    });
+
+    $('#lineChart').sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: 'line',
+        height: '70',
+        width: '100%',
+        lineWidth: '2',
+        lineColor: '#ffa534',
+        fillColor: 'rgba(255, 165, 52, .14)'
+    });</script>

@@ -1,0 +1,307 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/AdminLayout/_Main.cshtml";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+<style>
+    #qrcode img {
+        width: 50px;
+        height: 50px;
+    }
+</style>
+
+<div class="content">
+    <div class="panel-header bg-primary-gradient">
+        <div class="page-inner py-5">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+                <div>
+                    <h2 class="text-white pb-2 fw-bold">Vé xe</h2>
+                    <h5 class="text-white op-7 mb-2">Trang chủ/Admin/Vé xe</h5>
+                </div>
+                <div class="ml-md-auto py-2 py-md-0">
+                    <a href="#" class="btn btn-white btn-border btn-round mr-2">Manage</a>
+                    <a href="#" class="btn btn-secondary btn-round" data-toggle="modal" data-target="#addModal" onclick="openAddModal()">Thêm mới</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-inner mt--5">
+        <div class="row mt--2">
+            <div class="col-md-12">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive table-hover table-sales">
+                                    <table id="table_ve" class="display">
+                                        <thead>
+                                            <tr>
+                                                <th>Mã vé</th>
+                                                <th>Ngày phát hành</th>
+                                                <th>Ngày hết hạn</th>
+                                                <th>Tình trạng</th>
+                                                <th>Tuyến xe</th>
+                                                <th>Loại vé</th>
+                                                <th>Vé tháng</th>
+                                                <th>Giá</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var m in @ViewBag.ListVeXe)
+                                            {
+                                                <tr>
+                                                    <td>@m.Mave</td>
+                                                    <td>@m.Ngayphathanh</td>
+                                                    <td>@m.Ngayhethan</td>
+                                                    <td>@m.Tinhtrang</td>
+                                                    <td>@m.Tentuyen</td>
+                                                    <td>@m.Loaive</td>
+                                                    @if (m.Vethang == true)
+                                                    {
+                                                        <td style="text-align: center">
+                                                            <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td style="text-align: center">
+                                                            <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+
+                                                        </td>
+                                                    }
+                                                    <td>@m.Giatien</td>
+                                                    <td>
+                                                        <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#addModal" style="margin-right: 5px;" onclick="openUpdateModal(@m.Mave)">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-outline-danger btn-sm" onclick="openDeleteModal(@m.Mave)" data-toggle="modal" data-target="#deleteModal">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Xóa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 style="text-align:center">Bạn chắc chắn muốn xóa bản ghi này ?</h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="deleteItem()">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Thêm mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <form id="bouqueti-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Ngày phát hành</label>
+                                <input type="date" class="form-control contact-method" id="Ngayphathanh">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Ngày hết hạn</label>
+                                <input type="date" class="form-control contact-method" id="Ngayhethan">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Tình trạng</label>
+                                <input type="text" class="form-control contact-method" id="Tinhtrang">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="Matuyen">Chọn tuyến</label>
+                                <select class="form-control" id="Matuyen">
+                                    <option value="0" selected>Chọn tuyến xe</option>
+                                    @foreach (var c in @ViewBag.ListTuyenXe)
+                                    {
+                                        <option value="@c.Matuyen">@c.Tentuyen</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="v">Loại vé</label>
+                                <select class="form-control" id="Loaive">
+                                    <option value="0" selected>Chọn loại vé</option>
+                                    <option value="1">Học sinh - Sinh viên</option>
+                                    <option value="2">Người cao tuổi</option>
+                                    <option value="3">Vé lượt</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Giá tiền</label>
+                                <input type="text" class="form-control contact-method" id="Giatien">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="Vethang">Vé tháng</label>
+                                <input style="width:20px;height:20px" type="checkbox" class="form-control contact-method" id="Vethang">
+                            </div>
+                        </div>
+                    </form>
+                </div>  
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="submit()">Lưu thay đổi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    var id_record = 0;
+    var dataUpdate = {};
+
+    openAddModal = () => {
+        id_record = 0;
+        $('#Ngayphathanh').val('');
+        $('#Ngayhethan').val('');
+        $('#Tinhtrang').val('');
+        $('#Matuyen').val('0');
+        $('#Vethang').val('0');
+        $('#Giatien').val('');
+    };
+
+    // Example POST method implementation:
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    $(document).ready(function () {
+        $('#table_ve').DataTable();
+    });
+
+    submit = () => {
+        var req = {
+            Mave: id_record,
+            Ngayphathanh: $('#Ngayphathanh').val(),
+            Ngayhethan: $('#Ngayhethan').val(),
+            Tinhtrang: $('#Tinhtrang').val(),
+            Matuyen: $('#Matuyen').val(),
+            Loaive: $('#Loaive').val(),
+            Vethang: $('#Vethang').is(":checked"),
+            Giatien: $('#Giatien').val(),
+        }
+
+        postData('/VeXe/Save', req)
+            .then((data) => {
+                if (data.success) {
+                    toastr.success('Successfully !');
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            });
+    }
+
+    openDeleteModal = (id) => {
+        id_record = id;
+    }
+
+    formatDate = (y, m, d) => {
+        if (m < 10) {
+            m = '0' + m;
+        }
+        if (d < 10) {
+            d = '0' + d
+        }
+        return `${y}-${m}-${d}`.toString()
+    }
+
+    openUpdateModal = (id) => {
+        id_record = id;
+        $.ajax({
+            url: '/VeXe/FindById?mave=' + id,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    var nph = new Date(parseInt(result.data.Ngayphathanh.toString().replaceAll('/', '').replaceAll('Date(', '').replaceAll(')', '')));
+                    var nhh = new Date(parseInt(result.data.Ngayhethan.toString().replaceAll('/', '').replaceAll('Date(', '').replaceAll(')', '')));
+                    $('#Ngayphathanh').val(formatDate(nph.getFullYear(), nph.getMonth() + 1, nph.getDate()).toString());
+                    $('#Ngayhethan').val(formatDate(nhh.getFullYear(), nhh.getMonth() + 1, nhh.getDate()).toString());
+                    $('#Tinhtrang').val(result.data.Tinhtrang);
+                    $('#Matuyen').val(result.data.Matuyen);
+                    $('#Loaive').val(result.data.Loaive);
+                    $("#Vethang").prop('checked', result.data.Vethang);
+                    $('#Giatien').val(result.data.Giatien);
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+    deleteItem = () => {
+        $.ajax({
+            url: '/VeXe/Delete?mave=' + id_record,
+            type: 'GET',
+            success: function (result) {
+                if (result.success) {
+                    toastr.success('Successfully !');
+                    $('.modal').modal('hide');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Failed !');
+                    $('.modal').modal('hide');
+                }
+            }
+        });
+    }
+
+</script>

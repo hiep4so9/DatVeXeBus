@@ -1,0 +1,178 @@
+﻿<!-- header section strats -->
+<header class="header_section">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="index.html">
+                <span>
+                    BusStop
+                </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                    <ul class="navbar-nav  ">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/UserPage/Index"> Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/UserPage/TramXe"> Trạm Xe </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/UserPage/TuyenXe"> Tuyến Xe</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/UserPage/DatVe"> Mua Vé</a>
+                        </li>
+                        <li class="nav-item" id="notLogin">
+                            <a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#loginModal">Đăng nhập</a>
+                        </li>
+                        <li class="nav-item row" id="login">
+                            <a class="nav-link"  href="javascript:void(0)" onclick="seeHoadon()" ><i class="fa fa-user"></i></a>
+                            <a class="nav-link"  href="javascript:void(0)" onclick="seeHoadon()" id="us_login"></a>
+                            <a class="nav-link" href="javascript:void(0)"><i class="fa-solid fa-right-from-bracket" onclick="logout()"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
+<!-- end header section -->
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Đăng nhập</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <form id="bouqueti-form">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Tên đăng nhập</label>
+                                <input type="text" class="form-control contact-method" id="username" placeholder="Nhập tên đăng nhập">
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label class="required" for="inputEmail4">Mật khẩu</label>
+                                <input type="password" class="form-control contact-method" id="password">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" onclick="login()">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    seeHoadon = () => {
+        var id_tk = JSON.parse(localStorage.getItem('UserInfo')).Id_Taikhoan;
+        window.location.href = '/UserPage/DanhsachVe?id_TK=' + id_tk;
+    }
+
+    getInfo = () => {
+        var info = localStorage.getItem("UserInfo");
+        if (info) {
+            $('#login').show();
+            $('#notLogin').hide();
+            $('#us_login').text(JSON.parse(localStorage.getItem('UserInfo')).Tentaikhoan);
+        }
+        else {
+            $('#login').hide();
+            $('#notLogin').show();
+        }
+    }
+
+    $(document).ready(function () {
+        getInfo();
+    });
+
+    logout = () => {
+        localStorage.removeItem("UserInfo");
+        toastr.success('Successfully !');
+        getInfo();
+        window.location.reload();
+    }
+
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+    }
+
+    register = () => {
+        var req = {
+            Ten: $('#Ten').val(),
+            Ngaysinh: $('#Ngaysinh').val(),
+            Email: $('#Email').val(),
+            CCCD: $('#CCCD').val(),
+            TheHSSV: $('#TheHSSV').val(),
+            Diachi: $('#Diachi').val(),
+            Tentaikhoan: $('#Tentaikhoan').val(),
+            Matkhau: $('#Matkhau').val(),
+            Sodienthoai: $('#Sodienthoai').val(),
+        }
+
+        postData('../KhachHang/Register', req)
+            .then((data) => {
+                console.log(data);
+                if (data.success) {
+                    toastr.success('Successfully !');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Wrong password or username !');
+                }
+            });
+    }
+
+    login = () => {
+        var req = {
+            Tentaikhoan: $('#username').val(),
+            Matkhau: $('#password').val(),
+        }
+        postData('../TaiKhoan/Login', req)
+            .then((data) => {
+                console.log(data);
+                if (data.success) {
+                    var userInfo = {
+                        Id_Taikhoan: data.data.Id_Taikhoan,
+                        Maloai: data.data.Maloai.trim(),
+                        Tentaikhoan: data.data.Tentaikhoan.trim(),
+                        Token: data.token,
+                        Sodu: data.data.Sodu
+                    };
+                    localStorage.setItem("UserInfo", JSON.stringify(userInfo));
+                    toastr.success('Successfully !');
+                    window.location.reload();
+                }
+                else {
+                    toastr.warning('Wrong password or username !');
+                }
+            });
+    }
+</script>
